@@ -8,7 +8,7 @@ nest_asyncio.apply()  # Активируем nest_asyncio
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-TELEGRAM_BOT_TOKEN = '6684660741:AAEXXWt4rOVe_WOBwXoBvlHdF3fEWJPoUoA'  # Замените на свой токен
+TELEGRAM_BOT_TOKEN = '******'  # Замените на свой токен
 WEB_APP_URL = 'https://working-longhorn-suddenly.ngrok-free.app'
 IMAGE_URL = 'https://ibb.co/vkSpBCf'
 
