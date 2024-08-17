@@ -751,7 +751,7 @@
 	    levelLabel.textContent = `Level ${currentLevel + 1}`;
 	
 	    const levelValueBetweenButtons = document.getElementById(`levelValueBetweenButtons${playerId}`);
-	    levelValueBetweenButtons.textContent = currentLevel + 1; // Обновляем значение между кнопками
+	    levelValueBetweenButtons.textContent = currentLevel + 1;
 	}
 
 	function decreaseLevel(playerId) {
@@ -761,7 +761,7 @@
 	        levelLabel.textContent = `Level ${currentLevel - 1}`;
         
 	        const levelValueBetweenButtons = document.getElementById(`levelValueBetweenButtons${playerId}`);
-	        levelValueBetweenButtons.textContent = currentLevel - 1; // Обновляем значение между кнопками
+	        levelValueBetweenButtons.textContent = currentLevel - 1;
 	    }
 	}
 
@@ -1142,37 +1142,37 @@
 
 	function increaseHearts(playerId) {
 	    const heartCounter = document.getElementById(`player${playerId}Heart`);
-	    const currentHealthValue = document.getElementById(`currentHealthValue${playerId}`); // Получаем элемент для текущего здоровья
+	    const currentHealthValue = document.getElementById(`currentHealthValue${playerId}`);
 	    const currentHearts = parseInt(heartCounter.textContent, 10);
 	    heartCounter.textContent = currentHearts + 1;
-	    currentHealthValue.textContent = heartCounter.textContent; // Обновляем отображение здоровья
+	    currentHealthValue.textContent = heartCounter.textContent; 
 	}
 
 	function decreaseHearts(playerId) {
 	    const heartCounter = document.getElementById(`player${playerId}Heart`);
-	    const currentHealthValue = document.getElementById(`currentHealthValue${playerId}`); // Получаем элемент для текущего здоровья
+	    const currentHealthValue = document.getElementById(`currentHealthValue${playerId}`);
 	    const currentHearts = parseInt(heartCounter.textContent, 10);
 	    if (currentHearts > 0) {
 	        heartCounter.textContent = currentHearts - 1;
-	        currentHealthValue.textContent = heartCounter.textContent; // Обновляем отображение здоровья
+	        currentHealthValue.textContent = heartCounter.textContent; 
 	    }
 	}
 
 	function increaseShields(playerId) {
 	    const shieldCounter = document.getElementById(`player${playerId}Shield`);
-	    const currentShieldsValue = document.getElementById(`currentShieldsValue${playerId}`); // Получаем элемент для текущего щита
+	    const currentShieldsValue = document.getElementById(`currentShieldsValue${playerId}`); 
 	    const currentShields = parseInt(shieldCounter.textContent, 10);
 	    shieldCounter.textContent = currentShields + 1;
-	    currentShieldsValue.textContent = shieldCounter.textContent; // Обновляем отображение щита
+	    currentShieldsValue.textContent = shieldCounter.textContent; 
 	}
 
 	function decreaseShields(playerId) {
 	    const shieldCounter = document.getElementById(`player${playerId}Shield`);
-	    const currentShieldsValue = document.getElementById(`currentShieldsValue${playerId}`); // Получаем элемент для текущего щита
+	    const currentShieldsValue = document.getElementById(`currentShieldsValue${playerId}`); 
 	    const currentShields = parseInt(shieldCounter.textContent, 10);
 	    if (currentShields > 0) {
 	        shieldCounter.textContent = currentShields - 1;
-	        currentShieldsValue.textContent = shieldCounter.textContent; // Обновляем отображение щита
+	        currentShieldsValue.textContent = shieldCounter.textContent;
 	    }
 	}
 
