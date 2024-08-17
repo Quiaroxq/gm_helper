@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM Helper</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #27374D;
+            color: #DDE6ED;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2 {
+            color: #9DB2BF;
+            text-shadow: 2px 2px 4px #526D82;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #526D82;
+            border-radius: 10px;
+            background-color: #DDE6ED;
+            color: #27374D;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+         button {
+            background-color: #526D82;
+            color: #DDE6ED;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #27374D;
+        }
+
+        .nav-btn {
+            margin-right: 10px;
+            font-size: 1.2em;
+            padding: 10px 15px;
+        }
+
+        .nav-btn.active {
+            background-color: #9DB2BF;
+            color: #27374D;
+        }
+
+        img {
+            max-width: 100%;
+            border: 2px solid #9DB2BF;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #526D82;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            flex-grow: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .player-container {
+            display: grid;
+            grid-template-columns: repeat(1fr);
+            grid-gap: 10px;
+            justify-items: center;
+            margin-bottom: 20px;
+        }
+
+        .player-input {
+            background-color: #DDE6ED;
+            color: #27374D;
+            padding: 10px;
+            border: 1px solid #526D82;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+            width: 100%;
+            height: 450px;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        .player-input label {
+            margin-bottom: 5px;
+            font-size: 1.5em;
+            color: #9DB2BF;
+            text-align: center;
+        }
+
+        .player-name-input {
+            order: 1; 
+            background-color: #DDE6ED;
+            color: #27374D;
+            padding: 5px;
+            border: 1px solid #526D82;
+            border-radius: 5px;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-align: center;
+            width: 90%;
+            height: 30; 
+        }
+
+        .settings-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+
+        .settings-popup {
+            position: absolute;
+            top: 35px;
+            right: 10px;
+            background-color: #27374D;
+            border: 1px solid #9DB2BF;
+            border-radius: 5px;
+            padding: 10px;
+            width: 200px;
+            display: none;
+            z-index: 10000;
+        }
+
+        .settings-popup .control-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .settings-popup .control-btn {
+            background-color: #526D82;
+            color: #DDE6ED;
+            padding: 5px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            width: 45%;
+            transition: background-color 0.3s ease;
+        }
+
+        .settings-popup .control-btn:hover {
+            background-color: #27374D;
+        }
+
+        .add-player-btn {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+
+	.text-area {
+	    margin-top: auto; /* Сдвигает textarea вниз */
+	    width: 100%;
+	    padding: 10px;
+	    border: 1px solid #526D82;
+	    border-radius: 5px;
+	    background-color: #FFF;
+	    color: #27374D;
+	    box-sizing: border-box;
+	    height: 80px; /* Высота textarea */
+	    resize: none; /* Убирает возможность изменения размера */
+	    overflow-y: auto; /* Вертикальный скроллбар */
+	    word-wrap: break-word; /* Перенос текста */
+	    order: 9;	
+	}
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            background-color: #27374D;
+            padding: 10px 0;
+        }
+
+	.level-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+        .level-label {
+            font-size: 1.2em;
+            color: #526D82;
+            order: 2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .shape-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .shape {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            color: white;
+            background-color: #3A3B3C;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .trapezoid {
+            background-color: #2E2C3B; /* Более темный цвет */
+            clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+        }
+
+        .square {
+            background-color: #2E2C3B; /* Более темный цвет */
+        }
+
+        .hexagon {
+            background-color: #2E2C3B; /* Более темный цвет */
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .diamond {
+            background-color: #2E2C3B; /* Более темный цвет */
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            position: relative;
+        }
+
+        .diamond-text {
+            color: white;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .decagon {
+            background-color: #2E2C3B; /* Более темный цвет */
+            clip-path: polygon(50% 0%, 85% 15%, 100% 50%, 85% 85%, 50% 100%, 15% 85%, 0% 50%, 15% 15%);
+        }
+
+	.strength-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+        .strength-label {
+            font-size: 1.2em;
+            color: #526D82;
+            order: 3;
+            margin-bottom: 5px;
+            text-align: start;
+        }
+
+	.dexterity-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+	.dexterity-label {
+            font-size: 1.2em;
+            color: #526D82;
+            order: 4;
+            margin-bottom: 5px;
+            text-align: start;
+        }
+
+	.constitution-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+	.constitution-label {
+            font-size: 1.2em;
+            color: #526D82;
+            order: 5;
+            margin-bottom: 5px;
+            text-align: start;
+        }
+
+	.intelligence-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+	.intelligence-label {
+            font-size: 1.2em;
+            color: #526D82;
+            order: 6;
+            margin-bottom: 5px;
+            text-align: start;
+        }
+
+	.wisdom-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+	.wisdom-label {
+            font-size: 1.2em;
+            color: #526D82;
+            order: 7;
+            margin-bottom: 5px;
+            text-align: start;
+        }
+
+	.charisma-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+	.charisma-label {
+            font-size: 1.2em;
+            color: #526D82;
+            order: 8;
+            margin-bottom: 5px;
+            text-align: start;
+        }
+
+	.hearts-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+	}
+
+        .heart-container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: absolute;
+            top: 100px;
+            right: 10px;
+        }
+
+        .heart-icon, .shield-icon {
+            font-size: 2em;
+            margin: 3px;
+            text-align: center;
+        }
+
+        .heart-icon {
+            color: #D14D72;
+        }
+
+	.shields-value {
+	    margin: 0 10px;
+	    position: relative; 
+	    z-index: 1; 
+	    color: #DDE6ED; 
+	    font-weight: bold; 
+    }
+
+        .shield-icon {
+            color: #526D82;
+        }
+
+        .counter {
+            font-size: 1em;
+            margin-top: 5px;
+            color: #27374D;
+        }
+        .nav-btn.active {
+            background-color: #9DB2BF;
+            color: #27374D;
+        } 
+    </style>
+</head>
+<body>
+    <div id="generationPage" class="container">
+        <h1>GM Helper</h1>  
+
+        <h2>Generate Image</h2>
+        <div class="input-group">
+            <form action="/generate_image" method="post">
+                <input type="text" id="image_message" name="image_message" required placeholder="Describe the image">
+                <button type="submit">Generate</button>
+            </form>
+        </div>
+        {% if image_generated %}
+            <h2>Generated image:</h2>
+            <img src="{{ url_for('static', filename='image.jpg') }}" alt="Generated image">
+        {% endif %}
+        <h2>Search in rules</h2>
+        <div class="input-group">   
+            <form action="/generate_text" method="post">
+            <input type="text" id="user_message" name="user_message" required placeholder="Ask something about rules in DnD">
+            <button type="submit">Ask</button>
+            </form>
+        {% if answer %}
+        <h3>Ответ от GigaChat:</h3>
+        <p>{{ answer }}</p>
+        {% endif %}
+        </div>
+    </div>
+
+    <div id="playersPage" class="container hidden">
+        <h1>Players</h1>
+        <div class="player-container" id="playerContainer">
+            <div class="player-input" id="player1">
+                <input type="text" id="player1Name" value="Player 1" class="player-name-input" />
+                <div class="level-label" id="player1Level">Level 0</div>
+                <div class="strength-label" id="player1Strength">
+                    Strength <span id="strengthValue">10</span>
+                    <span id="newNumber">0</span>
+                </div>
+		<div class="dexterity-label" id="player1Dexterity">
+                    Dexterity <span id="dexterityValue">10</span>
+                    <span id="newNumberr">0</span>
+                </div>
+		<div class="constitution-label" id="player1Constitution">
+                    Physique <span id="constitutionValue">10</span>
+                    <span id="newNumberrr">0</span>
+                </div>
+		<div class="intelligence-label" id="player1Intelligence">
+                    Intelligence <span id="intelligenceValue">10</span>
+                    <span id="newNumberrrr">0</span>
+                </div>
+		<div class="wisdom-label" id="player1Wisdom">
+                    Wisdom <span id="wisdomValue">10</span>
+                    <span id="newNumberrrrr">0</span>
+                </div>
+		<div class="charisma-label" id="player1Charisma">
+                    Charisma <span id="charismaValue">10</span>
+                    <span id="newNumberrrrrr">0</span>
+                </div>
+                <div class="heart-container">
+                    <div class="heart-icon">❤️</div>
+                    <div class="counter" id="player1Heart">0</div>
+                    <div class="shield-icon">🛡️</div>
+                    <div class="counter" id="player1Shield">0</div>
+                </div>
+                <div class="settings-icon" onclick="toggleSettingsPopup(1)">
+                    ⚙️
+                </div>
+                <div class="settings-popup" id="settingsPopup1">
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseLevel(1)">+ Level</div>
+                        <span id="levelValueBetweenButtons1" class="level-value">0</span>
+                        <div class="control-btn" onclick="decreaseLevel(1)">- Level</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseHearts(1)">+ Hearts</div>
+			<span id="currentHealthValue1" class="hearts-value">0</span>
+                        <div class="control-btn" onclick="decreaseHearts(1)">- Hearts</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseShields(1)">+ Shields</div>
+			<span id="currentShieldsValue1" class="shields-value">0</span>
+                        <div class="control-btn" onclick="decreaseShields(1)">- Shields</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseStrength(1)">+ Stren</div>
+                        <span id="strengthValueBetweenButtons1" class="strength-value">10</span>
+                        <div class="control-btn" onclick="decreaseStrength(1)">- Stren</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseDexterity(1)">+ Dex</div>
+                        <span id="dexterityValueBetweenButtons1" class="dexterity-value">10</span>
+                        <div class="control-btn" onclick="decreaseDexterity(1)">- Dex</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseConstitution(1)">+ Phys</div>
+                        <span id="constitutionValueBetweenButtons1" class="constitution-value">10</span>
+                        <div class="control-btn" onclick="decreaseConstitution(1)">- Phys</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseIntelligence(1)">+ Int</div>
+                        <span id="intelligenceValueBetweenButtons1" class="intelligence-value">10</span>
+                        <div class="control-btn" onclick="decreaseIntelligence(1)">- Int</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseWisdom(1)">+ Wis</div>
+                        <span id="wisdomValueBetweenButtons1" class="wisdom-value">10</span>
+                        <div class="control-btn" onclick="decreaseWisdom(1)">- Wis</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseCharisma(1)">+ Char</div>
+                        <span id="charismaValueBetweenButtons1" class="charisma-value">10</span>
+                        <div class="control-btn" onclick="decreaseCharisma(1)">- Char</div>
+                    </div>
+                    <div class="control-btn" onclick="removePlayer(1)">Remove Player</div>
+                </div>
+		<textarea id="player1Input" class="text-area"></textarea>
+            </div>
+        </div>
+        <button class="add-player-btn" onclick="addPlayer()">Add Player</button>
+    </div>
+
+    <div id="Dices" class="container hidden">
+        <h1>Roll the dices</h1>
+        <div class="shape-container">
+            <div class="trapezoid shape" id="trapezoid-number">0</div>
+            <button onclick="generateNumber('trapezoid-number', 4)">Roll D4</button>
+        </div>
+        <div class="shape-container">
+            <div class="square shape" id="square-number">0</div>
+            <button onclick="generateNumber('square-number', 6)">Roll D6</button>
+        </div>
+        <div class="shape-container">
+            <div class="hexagon shape" id="hexagon-number">0</div>
+            <button onclick="generateNumber('hexagon-number', 8)">Roll D8</button>
+        </div>
+        <div class="shape-container">
+            <div class="diamond shape">
+                <div class="diamond-text" id="diamond-number">0</div>
+            </div>
+            <button onclick="generateNumber('diamond-number', 10)">Roll D10</button>
+        </div>
+        <div class="shape-container">
+            <div class="decagon shape" id="decagon-number">0</div>
+            <button onclick="generateNumber('decagon-number', 20)">Roll D20</button>
+        </div>
+    </div>
+
+    <div class="nav-container">
+        <button class="nav-btn active" id="generationNavBtn" onclick="showPage('generationPage')">Generation</button>
+        <button class="nav-btn" id="playersNavBtn" onclick="showPage('playersPage')">Players</button>
+        <button class="nav-btn" id="numbersNavBtn" onclick="showPage('Dices')">Dices</button>
+    </div>
+
+    <script>
+        let playerCounter = 1;
+
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.container');
+            pages.forEach(page => {
+                page.classList.add('hidden');
+            });
+
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.remove('hidden');
+            document.getElementById(pageId + 'NavBtn').classList.add('active');
+        }
+
+        function generateImage() {
+            const prompt = document.getElementById('imagePrompt').value;
+            fetch('/generate_image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.image_url) {
+                    document.getElementById('generatedImage').src = data.image_url;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+        }
+
+        function generateMusic() {
+            const prompt = document.getElementById('musicPrompt').value;
+            fetch('/generate_music', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.music_url) {
+                    document.getElementById('generatedMusic').src = data.music_url;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+        }
+
+        function generateNumber(elementId, maxNumber) {
+            const number = Math.floor(Math.random() * maxNumber) + 1;
+            document.getElementById(elementId).textContent = number;
+        }
+
+
+        function addPlayer() {
+            playerCounter++;
+            const playerContainer = document.getElementById('playerContainer');
+            const playerDiv = document.createElement('div');
+            playerDiv.className = 'player-input';
+            playerDiv.id = `player${playerCounter}`;
+            playerDiv.innerHTML = `
+                <input type="text" id="player${playerCounter}Name" value="Player ${playerCounter}" class="player-name-input" />
+                <div class="level-label" id="player${playerCounter}Level">Level 0</div>
+	        <div class="strength-label" id="player${playerCounter}Strength">
+	            Strength <span id="strengthValue">10</span> 
+	            <span id="newNumber">0</span>
+	        </div>
+		<div class="dexterity-label" id="player${playerCounter}Dexterity">
+	            Dexterity <span id="dexterityValue">10</span> 
+	            <span id="newNumberr">0</span>
+	        </div>
+		<div class="constitution-label" id="player${playerCounter}Constitution">
+	            Physique <span id="constitutionValue">10</span> 
+	            <span id="newNumberrr">0</span>
+	        </div>
+		<div class="intelligence-label" id="player${playerCounter}Intelligence">
+	            Intelligence <span id="intelligenceValue">10</span> 
+	            <span id="newNumberrrr">0</span>
+	        </div>
+		<div class="wisdom-label" id="player${playerCounter}Wisdom">
+	            Wisdom <span id="wisdomValue">10</span> 
+	            <span id="newNumberrrrr">0</span>
+	        </div>
+		<div class="charisma-label" id="player${playerCounter}Charisma">
+	            Charisma <span id="charismaValue">10</span> 
+	            <span id="newNumberrrrrr">0</span>
+	        </div>
+                <div class="heart-container">
+                    <div class="heart-icon">❤️</div>
+                    <div class="counter" id="player${playerCounter}Heart">0</div>
+                    <div class="shield-icon">🛡️</div>
+                    <div class="counter" id="player${playerCounter}Shield">0</div>
+                </div>
+                <div class="settings-icon" onclick="toggleSettingsPopup(${playerCounter})">
+                    ⚙️
+                </div>
+                <div class="settings-popup" id="settingsPopup${playerCounter}">
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseLevel(${playerCounter})">+ Level</div>
+                        <span id="levelValueBetweenButtons${playerCounter}" class="level-value">0</span>
+                        <div class="control-btn" onclick="decreaseLevel(${playerCounter})">- Level</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseHearts(${playerCounter})">+ Hearts</div>
+		        <span id="currentHealthValue${playerCounter}" class="hearts-value">0</span>
+                        <div class="control-btn" onclick="decreaseHearts(${playerCounter})">- Hearts</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseShields(${playerCounter})">+ Shields</div>
+			<span id="currentShieldsValue${playerCounter}" class="shields-value">0</span>
+                        <div class="control-btn" onclick="decreaseShields(${playerCounter})">- Shields</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseStrength(${playerCounter})">+ Stren</div>
+                        <span id="strengthValueBetweenButtons${playerCounter}" class="strength-value">0</span>
+                        <div class="control-btn" onclick="decreaseStrength(${playerCounter})">- Stren</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseDexterity(${playerCounter})">+ Dex</div>
+                        <span id="dexterityValueBetweenButtons${playerCounter}" class="dexterity-value">10</span>
+                        <div class="control-btn" onclick="decreaseDexterity(${playerCounter})">- Dex</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseConstitution(${playerCounter})">+ Phys</div>
+                        <span id="constitutionValueBetweenButtons${playerCounter}" class="constitution-value">10</span>
+                        <div class="control-btn" onclick="decreaseConstitution(${playerCounter})">- Phys</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseIntelligence(${playerCounter})">+ Int</div>
+                        <span id="intelligenceValueBetweenButtons${playerCounter}" class="intelligence-value">10</span>
+                        <div class="control-btn" onclick="decreaseIntelligence(${playerCounter})">- Int</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseWisdom(${playerCounter})">+ Wis</div>
+                        <span id="wisdomValueBetweenButtons${playerCounter}" class="wisdom-value">10</span>
+                        <div class="control-btn" onclick="decreaseWisdom(${playerCounter})">- Wis</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-btn" onclick="increaseCharisma(${playerCounter})">+ Char</div>
+                        <span id="charismaValueBetweenButtons${playerCounter}" class="charisma-value">10</span>
+                        <div class="control-btn" onclick="decreaseCharisma(${playerCounter})">- Char</div>
+                    </div>
+                    <div class="control-btn" onclick="removePlayer(${playerCounter})">Remove Player</div>
+                </div>
+		<textarea id="player${playerCounter}Input" class="text-area"></textarea>
+            `;
+            playerContainer.appendChild(playerDiv);
+        }
+
+        function toggleSettingsPopup(playerId) {
+            const popup = document.getElementById(`settingsPopup${playerId}`);
+            const isVisible = popup.style.display === 'block';
+            document.querySelectorAll('.settings-popup').forEach(popup => popup.style.display = 'none');
+            popup.style.display = isVisible ? 'none' : 'block';
+        }
+
+	function increaseLevel(playerId) {
+	    const levelLabel = document.getElementById(`player${playerId}Level`);
+	    const currentLevel = parseInt(levelLabel.textContent.split(' ')[1], 10);
+	    levelLabel.textContent = `Level ${currentLevel + 1}`;
+	
+	    const levelValueBetweenButtons = document.getElementById(`levelValueBetweenButtons${playerId}`);
+	    levelValueBetweenButtons.textContent = currentLevel + 1; // Обновляем значение между кнопками
+	}
+
+	function decreaseLevel(playerId) {
+	    const levelLabel = document.getElementById(`player${playerId}Level`);
+	    const currentLevel = parseInt(levelLabel.textContent.split(' ')[1], 10);
+	    if (currentLevel > 0) {
+	        levelLabel.textContent = `Level ${currentLevel - 1}`;
+        
+	        const levelValueBetweenButtons = document.getElementById(`levelValueBetweenButtons${playerId}`);
+	        levelValueBetweenButtons.textContent = currentLevel - 1; // Обновляем значение между кнопками
+	    }
+	}
+
+        function updateNewNumber(playerId,strength) {
+            let newNumber;
+            if (strength <= 1) {
+                newNumber = -5;
+            } else if (strength <= 3) {
+                newNumber = -4;
+            } else if (strength <= 5) {
+                newNumber = -3;
+            } else if (strength <= 7) {
+                newNumber = -2;
+            } else if (strength <= 9) {
+                newNumber = -1;
+            } else if (strength <= 11) {
+                newNumber = 0;
+            } else if (strength <= 13) {
+                newNumber = 1;
+            } else if (strength <= 15) {
+                newNumber = 2;
+            } else if (strength <= 17) {
+                newNumber = 3;
+            } else if (strength <= 19) {
+                newNumber = 4;
+            } else if (strength <= 21) {
+                newNumber = 5;
+            } else if (strength <= 23) {
+                newNumber = 6;
+            } else if (strength <= 25) {
+                newNumber = 7;
+            } else if (strength <= 27) {
+                newNumber = 8;
+            } else if (strength <= 29) {
+                newNumber = 9;
+            } else if (strength <= 30) {
+                newNumber = 10;
+            } else {
+	        newNumber = 0;
+	    }
+	    document.querySelector(`#player${playerId} .strength-label #newNumber`).textContent = newNumber;
+	}
+
+	function increaseStrength(playerId) {
+	    let strengthValue = document.getElementById("player" + playerId + "Strength").querySelector("#strengthValue");
+	    let strengthValueBetweenButtons = document.getElementById("strengthValueBetweenButtons" + playerId);
+	    let strength = parseInt(strengthValue.textContent);
+	    strength += 1;
+	    strengthValue.textContent = strength;
+	    strengthValueBetweenButtons.textContent = strength;
+	    updateNewNumber(playerId, strength);
+	}
+
+	function decreaseStrength(playerId) {
+	    let strengthValue = document.getElementById("player" + playerId + "Strength").querySelector("#strengthValue");
+	    let strengthValueBetweenButtons = document.getElementById("strengthValueBetweenButtons" + playerId);
+	    let strength = parseInt(strengthValue.textContent);
+	    if (strength > 0) {
+	        strength -= 1;
+	    }
+	    strengthValue.textContent = strength;
+	    strengthValueBetweenButtons.textContent = strength;
+	    updateNewNumber(playerId, strength);
+	}
+
+        function updateNewNumberr(playerId,dexterity) {
+            let newNumberr;
+            if (dexterity <= 1) {
+                newNumberr = -5;
+            } else if (dexterity <= 3) {
+                newNumberr = -4;
+            } else if (dexterity <= 5) {
+                newNumberr = -3;
+            } else if (dexterity <= 7) {
+                newNumberr = -2;
+            } else if (dexterity <= 9) {
+                newNumberr = -1;
+            } else if (dexterity <= 11) {
+                newNumberr = 0;
+            } else if (dexterity <= 13) {
+                newNumberr = 1;
+            } else if (dexterity <= 15) {
+                newNumberr = 2;
+            } else if (dexterity <= 17) {
+                newNumberr = 3;
+            } else if (dexterity <= 19) {
+                newNumberr = 4;
+            } else if (dexterity <= 21) {
+                newNumberr = 5;
+            } else if (dexterity <= 23) {
+                newNumberr = 6;
+            } else if (dexterity <= 25) {
+                newNumberr = 7;
+            } else if (dexterity <= 27) {
+                newNumberr = 8;
+            } else if (dexterity <= 29) {
+                newNumberr = 9;
+            } else if (dexterity <= 30) {
+                newNumberr = 10;
+            } else {
+	        newNumberr = 0;
+	    }
+	    document.querySelector(`#player${playerId} .dexterity-label #newNumberr`).textContent = newNumberr;
+	}
+
+
+	function increaseDexterity(playerId) {
+	    let dexterityValue = document.getElementById("player" + playerId + "Dexterity").querySelector("#dexterityValue");
+	    let dexterityValueBetweenButtons = document.getElementById("dexterityValueBetweenButtons" + playerId);
+	    let dexterity = parseInt(dexterityValue.textContent);
+	    dexterity += 1;
+	    dexterityValue.textContent = dexterity;
+	    dexterityValueBetweenButtons.textContent = dexterity;
+	    updateNewNumberr(playerId, dexterity);
+	}
+
+	function decreaseDexterity(playerId) {
+	    let dexterityValue = document.getElementById("player" + playerId + "Dexterity").querySelector("#dexterityValue");
+	    let dexterityValueBetweenButtons = document.getElementById("dexterityValueBetweenButtons" + playerId);
+	    let dexterity = parseInt(dexterityValue.textContent);
+	    if (dexterity > 0) {
+	        dexterity -= 1;
+	    }
+	    dexterityValue.textContent = dexterity;
+	    dexterityValueBetweenButtons.textContent = dexterity;
+	    updateNewNumberr(playerId, dexterity);
+	}
+
+        function updateNewNumberrr(playerId,constitution) {
+            let newNumberrr;
+            if (constitution <= 1) {
+                newNumberrr = -5;
+            } else if (constitution <= 3) {
+                newNumberrr = -4;
+            } else if (constitution <= 5) {
+                newNumberrr = -3;
+            } else if (constitution <= 7) {
+                newNumberrr = -2;
+            } else if (constitution <= 9) {
+                newNumberrr = -1;
+            } else if (constitution <= 11) {
+                newNumberrr = 0;
+            } else if (constitution <= 13) {
+                newNumberrr = 1;
+            } else if (constitution <= 15) {
+                newNumberrr = 2;
+            } else if (constitution <= 17) {
+                newNumberrr = 3;
+            } else if (constitution <= 19) {
+                newNumberrr = 4;
+            } else if (constitution <= 21) {
+                newNumberrr = 5;
+            } else if (constitution <= 23) {
+                newNumberrr = 6;
+            } else if (constitution <= 25) {
+                newNumberrr = 7;
+            } else if (constitution <= 27) {
+                newNumberrr = 8;
+            } else if (constitution <= 29) {
+                newNumberrr = 9;
+            } else if (constitution <= 30) {
+                newNumberrr = 10;
+            } else {
+	        newNumberrr = 0;
+	    }
+	    document.querySelector(`#player${playerId} .constitution-label #newNumberrr`).textContent = newNumberrr;
+	}
+
+	function increaseConstitution(playerId) {
+	    let constitutionValue = document.getElementById("player" + playerId + "Constitution").querySelector("#constitutionValue");
+	    let constitutionValueBetweenButtons = document.getElementById("constitutionValueBetweenButtons" + playerId);
+	    let constitution = parseInt(constitutionValue.textContent);
+	    constitution += 1;
+	    constitutionValue.textContent = constitution;
+	    constitutionValueBetweenButtons.textContent = constitution;
+	    updateNewNumberrr(playerId, constitution);
+	}
+
+	function decreaseConstitution(playerId) {
+	    let constitutionValue = document.getElementById("player" + playerId + "Constitution").querySelector("#constitutionValue");
+	    let constitutionValueBetweenButtons = document.getElementById("constitutionValueBetweenButtons" + playerId);
+	    let constitution = parseInt(constitutionValue.textContent);
+	    if (constitution > 0) {
+	        constitution -= 1;
+	    }
+	    constitutionValue.textContent = constitution;
+	    constitutionValueBetweenButtons.textContent = constitution;
+	    updateNewNumberrr(playerId, constitution);
+	}
+
+
+        function updateNewNumberrrr(playerId,intelligence) {
+            let newNumberrrr;
+            if (intelligence <= 1) {
+                newNumberrrr = -5;
+            } else if (intelligence <= 3) {
+                newNumberrrr = -4;
+            } else if (intelligence <= 5) {
+                newNumberrrr = -3;
+            } else if (intelligence <= 7) {
+                newNumberrrr = -2;
+            } else if (intelligence <= 9) {
+                newNumberrrr = -1;
+            } else if (intelligence <= 11) {
+                newNumberrrr = 0;
+            } else if (intelligence <= 13) {
+                newNumberrrr = 1;
+            } else if (intelligence <= 15) {
+                newNumberrrr = 2;
+            } else if (intelligence <= 17) {
+                newNumberrrr = 3;
+            } else if (intelligence <= 19) {
+                newNumberrrr = 4;
+            } else if (intelligence <= 21) {
+                newNumberrrr = 5;
+            } else if (intelligence <= 23) {
+                newNumberrrr = 6;
+            } else if (intelligence <= 25) {
+                newNumberrrr = 7;
+            } else if (intelligence <= 27) {
+                newNumberrrr = 8;
+            } else if (intelligence <= 29) {
+                newNumberrrr = 9;
+            } else if (intelligence <= 30) {
+                newNumberrrr = 10;
+            } else {
+	        newNumberrrr = 0;
+	    }
+	    document.querySelector(`#player${playerId} .intelligence-label #newNumberrrr`).textContent = newNumberrrr;
+	}
+
+	function increaseIntelligence(playerId) {
+	    let intelligenceValue = document.getElementById("player" + playerId + "Intelligence").querySelector("#intelligenceValue");
+	    let intelligenceValueBetweenButtons = document.getElementById("intelligenceValueBetweenButtons" + playerId);
+	    let intelligence = parseInt(intelligenceValue.textContent);
+	    intelligence += 1;
+	    intelligenceValue.textContent = intelligence;
+	    intelligenceValueBetweenButtons.textContent = intelligence;
+	    updateNewNumberrrr(playerId, intelligence);
+	}
+
+	function decreaseIntelligence(playerId) {
+	    let intelligenceValue = document.getElementById("player" + playerId + "Intelligence").querySelector("#intelligenceValue");
+	    let intelligenceValueBetweenButtons = document.getElementById("intelligenceValueBetweenButtons" + playerId);
+	    let intelligence = parseInt(intelligenceValue.textContent);
+	    if (intelligence > 0) {
+	        intelligence -= 1;
+	    }
+	    intelligenceValue.textContent = intelligence;
+	    intelligenceValueBetweenButtons.textContent = intelligence;
+	    updateNewNumberrrr(playerId, intelligence);
+	}
+
+
+        function updateNewNumberrrrr(playerId,wisdom) {
+            let newNumberrrrr;
+            if (wisdom <= 1) {
+                newNumberrrrr = -5;
+            } else if (wisdom <= 3) {
+                newNumberrrrr = -4;
+            } else if (wisdom <= 5) {
+                newNumberrrrr = -3;
+            } else if (wisdom <= 7) {
+                newNumberrrrr = -2;
+            } else if (wisdom <= 9) {
+                newNumberrrrr = -1;
+            } else if (wisdom <= 11) {
+                newNumberrrrr = 0;
+            } else if (wisdom <= 13) {
+                newNumberrrrr = 1;
+            } else if (wisdom <= 15) {
+                newNumberrrrr = 2;
+            } else if (wisdom <= 17) {
+                newNumberrrrr = 3;
+            } else if (wisdom <= 19) {
+                newNumberrrrr = 4;
+            } else if (wisdom <= 21) {
+                newNumberrrrr = 5;
+            } else if (wisdom <= 23) {
+                newNumberrrrr = 6;
+            } else if (wisdom <= 25) {
+                newNumberrrrr = 7;
+            } else if (wisdom <= 27) {
+                newNumberrrrr = 8;
+            } else if (wisdom <= 29) {
+                newNumberrrrr = 9;
+            } else if (wisdom <= 30) {
+                newNumberrrrr = 10;
+            } else {
+	        newNumberrrrr = 0;
+	    }
+	    document.querySelector(`#player${playerId} .wisdom-label #newNumberrrrr`).textContent = newNumberrrrr;
+	}
+
+	function increaseWisdom(playerId) {
+	    let wisdomValue = document.getElementById("player" + playerId + "Wisdom").querySelector("#wisdomValue");
+	    let wisdomValueBetweenButtons = document.getElementById("wisdomValueBetweenButtons" + playerId);
+	    let wisdom = parseInt(wisdomValue.textContent);
+	    wisdom += 1;
+	    wisdomValue.textContent = wisdom;
+	    wisdomValueBetweenButtons.textContent = wisdom;
+	    updateNewNumberrrrr(playerId, wisdom);
+	}
+
+	function decreaseWisdom(playerId) {
+	    let wisdomValue = document.getElementById("player" + playerId + "Wisdom").querySelector("#wisdomValue");
+	    let wisdomValueBetweenButtons = document.getElementById("wisdomValueBetweenButtons" + playerId);
+	    let wisdom = parseInt(wisdomValue.textContent);
+	    if (wisdom > 0) {
+	        wisdom -= 1;
+	    }
+	    wisdomValue.textContent = wisdom;
+	    wisdomValueBetweenButtons.textContent = wisdom;
+	    updateNewNumberrrrr(playerId, wisdom);
+	}
+
+        function updateNewNumberrrrrr(playerId,charisma) {
+            let newNumberrrrrr;
+            if (charisma <= 1) {
+                newNumberrrrrr = -5;
+            } else if (charisma <= 3) {
+                newNumberrrrrr = -4;
+            } else if (charisma <= 5) {
+                newNumberrrrrr = -3;
+            } else if (charisma <= 7) {
+                newNumberrrrrr = -2;
+            } else if (charisma <= 9) {
+                newNumberrrrrr = -1;
+            } else if (charisma <= 11) {
+                newNumberrrrrr = 0;
+            } else if (charisma <= 13) {
+                newNumberrrrrr = 1;
+            } else if (charisma <= 15) {
+                newNumberrrrrr = 2;
+            } else if (charisma <= 17) {
+                newNumberrrrrr = 3;
+            } else if (charisma <= 19) {
+                newNumberrrrrr = 4;
+            } else if (charisma <= 21) {
+                newNumberrrrrr = 5;
+            } else if (charisma <= 23) {
+                newNumberrrrrr = 6;
+            } else if (charisma <= 25) {
+                newNumberrrrrr = 7;
+            } else if (charisma <= 27) {
+                newNumberrrrrr = 8;
+            } else if (charisma <= 29) {
+                newNumberrrrrr = 9;
+            } else if (charisma <= 30) {
+                newNumberrrrrr = 10;
+            } else {
+	        newNumberrrrrr = 0;
+	    }
+	    document.querySelector(`#player${playerId} .charisma-label #newNumberrrrrr`).textContent = newNumberrrrrr;
+	}
+
+	function increaseCharisma(playerId) {
+	    let charismaValue = document.getElementById("player" + playerId + "Charisma").querySelector("#charismaValue");
+	    let charismaValueBetweenButtons = document.getElementById("charismaValueBetweenButtons" + playerId);
+	    let charisma = parseInt(charismaValue.textContent);
+	    charisma += 1;
+	    charismaValue.textContent = charisma;
+	    charismaValueBetweenButtons.textContent = charisma;
+	    updateNewNumberrrrrr(playerId, charisma);
+	}
+
+	function decreaseCharisma(playerId) {
+	    let charismaValue = document.getElementById("player" + playerId + "Charisma").querySelector("#charismaValue");
+	    let charismaValueBetweenButtons = document.getElementById("charismaValueBetweenButtons" + playerId);
+	    let charisma = parseInt(charismaValue.textContent);
+	    if (charisma > 0) {
+	        charisma -= 1;
+	    }
+	    charismaValue.textContent = charisma;
+	    charismaValueBetweenButtons.textContent = charisma;
+	    updateNewNumberrrrrr(playerId, charisma);
+	}
+
+	function increaseHearts(playerId) {
+	    const heartCounter = document.getElementById(`player${playerId}Heart`);
+	    const currentHealthValue = document.getElementById(`currentHealthValue${playerId}`); // Получаем элемент для текущего здоровья
+	    const currentHearts = parseInt(heartCounter.textContent, 10);
+	    heartCounter.textContent = currentHearts + 1;
+	    currentHealthValue.textContent = heartCounter.textContent; // Обновляем отображение здоровья
+	}
+
+	function decreaseHearts(playerId) {
+	    const heartCounter = document.getElementById(`player${playerId}Heart`);
+	    const currentHealthValue = document.getElementById(`currentHealthValue${playerId}`); // Получаем элемент для текущего здоровья
+	    const currentHearts = parseInt(heartCounter.textContent, 10);
+	    if (currentHearts > 0) {
+	        heartCounter.textContent = currentHearts - 1;
+	        currentHealthValue.textContent = heartCounter.textContent; // Обновляем отображение здоровья
+	    }
+	}
+
+	function increaseShields(playerId) {
+	    const shieldCounter = document.getElementById(`player${playerId}Shield`);
+	    const currentShieldsValue = document.getElementById(`currentShieldsValue${playerId}`); // Получаем элемент для текущего щита
+	    const currentShields = parseInt(shieldCounter.textContent, 10);
+	    shieldCounter.textContent = currentShields + 1;
+	    currentShieldsValue.textContent = shieldCounter.textContent; // Обновляем отображение щита
+	}
+
+	function decreaseShields(playerId) {
+	    const shieldCounter = document.getElementById(`player${playerId}Shield`);
+	    const currentShieldsValue = document.getElementById(`currentShieldsValue${playerId}`); // Получаем элемент для текущего щита
+	    const currentShields = parseInt(shieldCounter.textContent, 10);
+	    if (currentShields > 0) {
+	        shieldCounter.textContent = currentShields - 1;
+	        currentShieldsValue.textContent = shieldCounter.textContent; // Обновляем отображение щита
+	    }
+	}
+
+        function removePlayer(playerId) {
+            const playerDiv = document.getElementById(`player${playerId}`);
+            playerDiv.remove();
+        }
+
+        function generateImage() {
+            const imagePrompt = document.getElementById('imagePrompt').value;
+            const generatedImage = document.getElementById('generatedImage');
+            generatedImage.src = `https://via.placeholder.com/800x400.png?text=${encodeURIComponent(imagePrompt)}`;
+        }
+
+        function generateMusic() {
+            const musicPrompt = document.getElementById('musicPrompt').value;
+            const generatedMusic = document.getElementById('generatedMusic');
+            generatedMusic.src = `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3`;
+            generatedMusic.play();
+        }
+        function showGenerationPage() {
+            document.getElementById('generationPage').classList.remove('hidden');
+            document.getElementById('playersPage').classList.add('hidden');
+            document.getElementById('generationNav').classList.add('active');
+            document.getElementById('playersNav').classList.remove('active');
+        }
+
+        function showPlayersPage() {
+            document.getElementById('generationPage').classList.add('hidden');
+            document.getElementById('playersPage').classList.remove('hidden');
+            document.getElementById('generationNav').classList.remove('active');
+            document.getElementById('playersNav').classList.add('active');
+        }
+    </script>
+</body>
+</html>
