@@ -8,10 +8,10 @@ import uuid
 
 app = Flask(__name__)
 
-# Учетные данные для получения токена
-auth = "ZTAxZWE5ODMtMzViNi00MGMxLTk0ODktYjFiZTU0NWJjNzc3OmM4ZmU3NzYzLWEwYTYtNGM1Yy1iNjAwLTA2OGI2ZDU1ZDAwNg=="
-client_id = "e01ea983-35b6-40c1-9489-b1be545bc777"
-secret = "c8fe7763-a0a6-4c5c-b600-068b6d55d006"
+# Учетные данные для получения токена (замените на свои в SBER AI)
+auth = "*******"
+client_id = "******"
+secret = "*******"
 giga_token = ""
 # Функция для получения токена
 def get_token(auth_token, scope='GIGACHAT_API_PERS'):
